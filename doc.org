@@ -1,0 +1,6 @@
+** How to make post request
+{
+"accessory-name": "the unique name for that accessory", 
+"action": "the name of the action you want that accessory to perform",
+(optional)"kwargs": {additional arguments needed for that action
+}

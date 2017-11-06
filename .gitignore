@@ -1,0 +1,13 @@
+__pycache__/
+
+build/
+
+dist/
+
+node_modules/
+
+pipfile
+
+pipfile.lock
+
+*.json
