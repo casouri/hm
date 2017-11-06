@@ -1,61 +1,54 @@
-class TestMessenger():
-    '''test messenger that transmit message through raspberry pi RPIO
+import log
 
-    Provides basic abstractions(set up, send hign/low signal) for subclasses that specifically implement different mesages
+logger = log.setupLog(__name__, 'debug')
 
-    This class is meant to be overwrited by subclass
 
-    send method should be kept untouched
+class TestGPIOSwitch():
+    '''a test switch. Only have on and off status'''
 
-    Must call cleanup action before program exits
-
-    every action return a response string
-
-    Properties:
-        pins (list): a list ot GPIO pins used
-    '''
     commonResponse = 'Action OK'
 
-    def __init__(self, pins):
-        self.pins = pins
-
-    def send(self, action):
-        '''send message
+    def __init__(self,
+                 name: str,
+                 description: str='no description',
+                 pin: int=11) -> None:
+        '''init
 
         Args:
-            action (dict): {'action', ['kwargs'(optional)]}
+            name (str): the name of the swtich, e.g.: lamp
+            description (str): default to "no description". describe the switch, e.g.: my desktop lamp
+            pin (int): the pin number of the gpio pin you want to use.
         '''
-        operation = action['action']
-        if 'kwargs' in action:
-            kwargs = action['kwargs']
-        else:
-            kwargs = {}
 
-        # actual working
-        response = self.actionBook[operation](self, **kwargs)
+    def act(self, action: str, kwargs: dict={}) -> str:
+        '''take an action
+
+        Args:
+            action (str): {'action':'action name', 'kwargs': ['kwargs' (optional)]}
+            kwargs (dict): default {}. Any possible keyword arguments
+        '''
+        logger.debug(action)
+        response = self.actionBook[action](self, **kwargs)
         return response
 
-    def _switchOn(self):
-        print('switched on')
+    def _switchOn(self) -> str:
         return self.commonResponse
 
-    def _switchOff(self):
-        print('swtiched off')
+    def _switchOff(self) -> str:
         return self.commonResponse
 
-    def _getStatus(self):
-        '''gets the other end's status
+    def _getStatus(self) -> str:
+        '''gets the switch's status
 
         Returns:
-            dict: {'status name': 'status'}
+            str: {"onoff": 'status'}
         '''
         # you can treat a output pin as a input pin
         # when you want to know the status
-        print('check status. I am just a test messenger')
-        return 'some return'
+        onoffStatus = 'on or off? Who knows'
+        return ('{"onoff": "%s"}' % onoffStatus)
 
-    def _cleanup(self):
-        print('cleaned up')
+    def _cleanup(self) -> str:
         return self.commonResponse
 
     actionBook = {
@@ -64,32 +57,3 @@ class TestMessenger():
         'get-status': _getStatus,
         'cleanup': _cleanup
     }
-
-
-class TestSwitch():
-    '''a test switch. Only have on and off status'''
-    messengerBook = {'hard-switch-messenger': TestMessenger}
-
-    def __init__(self,
-                 name,
-                 messenger,
-                 messengerKWArgs,
-                 description='no description'):
-        self.name = name
-        self.messenger = self.messengerBook[messenger](**messengerKWArgs)
-        self.discription = description
-
-    def act(self, action):
-        '''take an action
-
-        Args:
-            action (dict): {'action':'action name', 'kwargs': ['kwargs' (optional)]}
-        '''
-        response = self.messenger.send(action)
-        return response
-
-
-if __name__ == '__main__':
-    switch = TestSwitch('lamp', 'hard-switch-messenger', {'pins': [11]},
-                        'my desktop lamp')
-    switch.act({'operation': 'switch-on'})

@@ -11,3 +11,7 @@ pipfile
 pipfile.lock
 
 *.json
+
+root.crt
+
+root.key

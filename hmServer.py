@@ -39,7 +39,7 @@ PASS_WORD = config['passwd']
 
 
 # credit to http://code.activestate.com/recipes/81547-using-a-simple-dictionary-for-cgi-parameters/
-def cgiFieldStorageToDict(fieldStorage):
+def cgiFieldStorageToDict(fieldStorage) -> dict:
     """Get a plain dictionary, rather than the '.value' system used by the cgi module."""
     params = {}
     for key in fieldStorage.keys():
@@ -47,7 +47,7 @@ def cgiFieldStorageToDict(fieldStorage):
     return params
 
 
-def exit_handler():
+def exit_handler() -> None:
     '''calls cleanup functions'''
     logger.info('Exiting')
     if len(cleanupList) != 0:
@@ -56,7 +56,7 @@ def exit_handler():
 
 
 class HMRequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
+    def do_GET(self) -> None:
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -65,7 +65,7 @@ class HMRequestHandler(BaseHTTPRequestHandler):
         message = 'Connection OK'
         self.wfile.write(bytes(message, 'utf8'))
 
-    def do_POST(self):
+    def do_POST(self) -> None:
         '''handle post requests
 
         post format: {"accessory-name": "name", "action": "some action", (optional)"kwargs": {}}'''
@@ -105,12 +105,8 @@ class HMRequestHandler(BaseHTTPRequestHandler):
             logger.debug(accessoryController.accessoryBook)
 
             # actual working
-            response = accessoryController.accessoryBook[accessoryName].act({
-                'action':
-                actionName,
-                'kwargs':
-                kwargs
-            })
+            response = accessoryController.accessoryBook[accessoryName].act(
+                action=actionName, kwargs=kwargs)
 
             logger.debug(response)
             self.wfile.write(bytes(response, 'utf8'))
@@ -121,7 +117,7 @@ class HMRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes('Action failed', 'utf8'))
 
 
-def run():
+def run() -> None:
     logger.info('Starting HM server')
     serverAddress = (ADDRESS, PORT)
     httpd = HTTPServer(serverAddress, HMRequestHandler)

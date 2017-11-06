@@ -12,9 +12,9 @@ class Controller():
     '''control all the behaviors of accessories'''
     accessoryBook = {}
 
-    #TODO
+    # TODO
     # accessoryConstructorBook = {'hard-switch': accessory.Switch}
-    accessoryConstructorBook = {'hard-switch': testAccessory.TestSwitch}
+    accessoryConstructorBook = {'hard-switch': testAccessory.TestGPIOSwitch}
 
     def __init__(self):
         self.createAcceccories()
