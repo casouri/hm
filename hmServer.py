@@ -122,8 +122,11 @@ def run() -> None:
     serverAddress = (ADDRESS, PORT)
     httpd = HTTPServer(serverAddress, HMRequestHandler)
 
-    # httpd.socket = ssl.wrap_socket(
-    #     httpd.socket, keyfile="ca.key", certfile='ca.crt', server_side=True)
+    httpd.socket = ssl.wrap_socket(
+        httpd.socket,
+        keyfile="root.key",
+        certfile='root.crt',
+        server_side=True)
 
     logger.info('Running server')
     try:
