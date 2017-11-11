@@ -1,0 +1,13 @@
+* Environment
+** python3
+ NA
+
+** node
+home-bridge
+
+(local)
+#+BEGIN_SRC bash
+npm install homebridge-http-switch
+#+END_SRC
+
+
