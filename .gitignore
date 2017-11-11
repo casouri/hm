@@ -15,3 +15,6 @@ pipfile.lock
 root.crt
 
 root.key
+
+.venv/
+

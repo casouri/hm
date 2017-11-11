@@ -1,6 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-import atexit
 import cgi
 import ssl
 
@@ -71,7 +70,7 @@ class HMRequestHandler(BaseHTTPRequestHandler):
         post format: {"accessory-name": "name", "action": "some action", (optional)"kwargs": {}}'''
 
         self.send_response(200)
-        self.send_header('Content-type', 'text/json')
+        self.send_header('Content-type', 'text/plain')
         self.end_headers()
 
         form = cgi.FieldStorage(
@@ -122,11 +121,11 @@ def run() -> None:
     serverAddress = (ADDRESS, PORT)
     httpd = HTTPServer(serverAddress, HMRequestHandler)
 
-    httpd.socket = ssl.wrap_socket(
-        httpd.socket,
-        keyfile="root.key",
-        certfile='root.crt',
-        server_side=True)
+    # httpd.socket = ssl.wrap_socket(
+    #     httpd.socket,
+    #     keyfile="root.key",
+    #     certfile='root.crt',
+    #     server_side=True)
 
     logger.info('Running server')
     try:
